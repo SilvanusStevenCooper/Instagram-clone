@@ -1,5 +1,14 @@
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, useWindowDimensions } from "react-native";
 import { Ionicons, Feather, AntDesign } from "@expo/vector-icons";
+import { AdvancedImage } from "cloudinary-react-native";
+import { Cloudinary } from "@cloudinary/url-gen";
+
+// Import required actions and qualifiers.
+import { thumbnail } from "@cloudinary/url-gen/actions/resize";
+import { byRadius } from "@cloudinary/url-gen/actions/roundCorners";
+import { focusOn } from "@cloudinary/url-gen/qualifiers/gravity";
+import { FocusOn } from "@cloudinary/url-gen/qualifiers/focusOn";
+import { cld } from "./cloudinary";
 
 interface PostListItemsProps {
   post: {
@@ -17,21 +26,30 @@ interface PostListItemsProps {
 }
 
 const PostListItems = ({ post }: PostListItemsProps) => {
+  const { width } = useWindowDimensions();
+
+  // cld.image returns a CloudinaryImage with the configuration set.
+  const image = cld.image(post.image);
+  image.resize(thumbnail().width(width).height(width));
+
+  const avatar = cld.image(post.user.avatar_url);
+  avatar.resize(
+    thumbnail().width(48).height(48).gravity(focusOn(FocusOn.face()))
+  );
+
   return (
     <View className="bg-white">
       {/* post user Icon/image */}
       <View className="m-1 p-3 flex-row items-center gap-4">
-        <Image
-          source={{ uri: post.user.image_url }}
+        <AdvancedImage
+          cldImg={avatar}
           className="w-12 aspect-square rounded-full"
         />
         <Text className="font-semibold">{post.user.username}</Text>
       </View>
       {/* post image */}
-      <Image
-        source={{ uri: post.image_url }}
-        className="w-full aspect-square"
-      />
+
+      <AdvancedImage cldImg={image} className="w-full aspect-square" />
 
       {/*post footer */}
       <View className="flex-row gap-3 p-3">

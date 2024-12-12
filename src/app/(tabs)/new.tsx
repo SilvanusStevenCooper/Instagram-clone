@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
+import Button from "@/src/components/button";
 
 const CreateScreen = () => {
   const [caption, setCaption] = useState("Hello world. How are you all doing?");
@@ -66,9 +67,7 @@ const CreateScreen = () => {
         {/* upload button */}
 
         <View className="mt-auto w-full">
-          <Pressable className="bg-blue-500 w-full p-3 items-center rounded-lg">
-            <Text className="text-white font-semibold">share</Text>
-          </Pressable>
+          <Button title={"Share"} onPress={() => {}} />
         </View>
       </View>
     </ScrollView>
